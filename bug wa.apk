@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Prank Aman — Demo</title>
+  <style>
+    body{font-family:system-ui,Segoe UI,Roboto,Arial;margin:0;background:#f3f4f6;display:flex;align-items:center;justify-content:center;height:100vh}
+    .card{background:#fff;padding:24px;border-radius:12px;box-shadow:0 8px 30px rgba(2,6,23,.12);max-width:560px;width:92%;text-align:center}
+    h1{margin:0 0 8px;font-size:20px}
+    p.small{color:#555;margin:0 0 16px}
+    .btn{display:inline-block;padding:10px 14px;border-radius:8px;border:0;cursor:pointer;font-weight:600}
+    .btn-primary{background:#0b8457;color:#fff}
+    .btn-ghost{background:#eee;color:#111;margin-left:8px}
+    /* modal */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:1000}
+    .modal{background:#fff;padding:20px;border-radius:12px;max-width:420px;width:90%;text-align:center;box-shadow:0 10px 40px rgba(2,6,23,.2)}
+    .modal h2{margin:0 0 8px}
+    .badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#ffde59;color:#6b3b00;font-weight:700;margin-bottom:8px}
+    .small-muted{font-size:13px;color:#666;margin-top:8px}
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <h1 id="title">Demo Prank Aman</h1>
+    <p class="small">Halaman ini menunjukkan contoh prank yang **aman** — pesan jelas menyatakan ini cuma bercanda dan mudah ditutup.</p>
+    <div>
+      <button id="start" class="btn btn-primary">Tampilkan Prank (Aman)</button>
+      <button id="example" class="btn btn-ghost">Contoh lain</button>
+    </div>
+  </div>
+
+  <!-- Modal (disembunyikan awalnya) -->
+  <div id="overlay" class="overlay" style="display:none" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="badge">PRANK — Hanya Hiburan</div>
+      <h2 id="modalTitle">Tenang — Ini <em>Hanya</em> Prank!</h2>
+      <p class="small-muted">Bukan malware. Perangkatmu TIDAK dikunci. Tekan "Stop" untuk menghentikan.</p>
+      <div style="margin-top:12px;">
+        <button id="stop" class="btn btn-ghost">Stop</button>
+        <button id="more" class="btn btn-primary" style="margin-left:8px">Buat lebih lucu</button>
+      </div>
+      <p class="small-muted" style="margin-top:12px; font-size:12px">Tip: gunakan prank ini hanya pada teman yang kamu kenal & dengan izin mereka.</p>
+    </div>
+  </div>
+
+  <script>
+    // Aman: tidak menggunakan alert() berulang — pakai modal yang bisa ditutup
+    const overlay = document.getElementById('overlay');
+    const start = document.getElementById('start');
+    const stop = document.getElementById('stop');
+    const more = document.getElementById('more');
+
+    let spamInterval = null;
+    let counter = 0;
+
+    function showModal(){
+      overlay.style.display = 'flex';
+      // contoh "spam" aman: ganti teks kecil berkala, batas 6 kali
+      counter = 0;
+      if(spamInterval) clearInterval(spamInterval);
+      spamInterval = setInterval(()=> {
+        counter++;
+        const badge = overlay.querySelector('.badge');
+        badge.textContent = `PRANK — Ini cuma lelucon (${counter}/6)`;
+        // hentikan otomatis setelah 6 kali
+        if(counter >= 6){
+          stopPrank();
+        }
+      }, 700); // setiap 700ms update teks (bukan popup browser)
+    }
+
+    function stopPrank(){
+      overlay.style.display = 'none';
+      if(spamInterval) clearInterval(spamInterval);
+      spamInterval = null;
+    }
+
+    start.addEventListener('click', showModal);
+    stop.addEventListener('click', stopPrank);
+
+    more.addEventListener('click', ()=>{
+      // contoh tambahan: ubah judul modal jadi lucu tapi tetap jelas ini prank
+      const title = overlay.querySelector('#modalTitle');
+      title.innerHTML = 'Ups! HP TIDAK TERKUNCI — Ini Hanya Prank 😄';
+    });
+
+    // Optional: jika ingin otomatis tampil saat dibuka (gunakan dengan hati-hati),
+    // uncomment baris di bawah. Aku sengaja tidak mengaktifkannya supaya lebih etis.
+    // window.addEventListener('load', showModal);
+  </script>
+</body>
+</html>
